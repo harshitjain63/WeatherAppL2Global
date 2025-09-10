@@ -1,7 +1,12 @@
 import { API_URL, WEATHER_API_KEY } from '@env';
 import { client } from './axios-instance';
+import { TemperatureUnit } from '../Redux/settings-slice';
 
-export const getWeather = async (lat: number, lon: number) => {
+export const getWeather = async (
+  lat: number,
+  lon: number,
+  unit: TemperatureUnit,
+) => {
   try {
     const response = await client.get(`${API_URL}/forecast.json`, {
       params: {
