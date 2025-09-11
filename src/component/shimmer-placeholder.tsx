@@ -35,20 +35,22 @@ export const ShimmerPlaceholder = ({
     const backgroundColor = interpolateColor(
       shimmer.value,
       [0, 1],
-      ['#e0e0e0', '#f5f5f5'], // shimmer-like effect
+      ['#e0e0e0', '#f5f5f5'],
     );
     return { backgroundColor };
   });
 
   return (
     <AnimatedView
-      style={{
-        height,
-        width,
-        borderRadius,
-        overflow: 'hidden',
-      }}
-      animatedProps={animatedStyle as any}
+      style={[
+        {
+          height,
+          width,
+          borderRadius,
+          overflow: 'hidden',
+        },
+        animatedStyle,
+      ]}
     />
   );
 };

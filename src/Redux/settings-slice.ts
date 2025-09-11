@@ -9,7 +9,7 @@ interface SettingsState {
 
 const initialState: SettingsState = {
   unit: 'C',
-  category: 'general', // Default category
+  category: 'General', // Default category
 };
 
 const settingsSlice = createSlice({
