@@ -26,6 +26,8 @@ export interface ForecastDay {
     mintemp_c: number;
     avgtemp_c: number;
     condition: WeatherCondition;
+    maxtemp_f: number;
+    mintemp_f: number;
   };
 }
 

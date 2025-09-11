@@ -1,8 +1,15 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, Text, Button, ScrollView, StyleSheet } from 'react-native';
-import { AppDispatch, RootState } from '../Redux/store';
-import { setCategory, setUnit } from '../Redux/settings-slice';
-import { useSelector, useDispatch } from 'react-redux';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Vibration,
+} from 'react-native';
+import { useAppDispatch, useAppSelector } from '../Redux/hooks';
+import { setCategory, setUnit, TemperatureUnit } from '../Redux/settings-slice';
 
 const categories = [
   'General',
@@ -17,43 +24,77 @@ const categories = [
 ];
 
 const SettingsScreen = () => {
-  const dispatch: AppDispatch = useDispatch();
-
-  // Read values from Redux
-  const unit = useSelector((state: RootState) => state.settings.unit);
-  const category = useSelector((state: RootState) => state.settings.category);
+  const dispatch = useAppDispatch();
+  const unit = useAppSelector(state => state.settings.unit);
+  const category = useAppSelector(state => state.settings.category);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Temperature Unit</Text>
+      <Text maxFontSizeMultiplier={1.2} style={styles.title}>
+        Temperature Unit
+      </Text>
       <View style={styles.buttonRow}>
-        <Button
-          title="Celsius"
-          onPress={() => dispatch(setUnit('C'))}
-          color={unit === 'C' ? 'blue' : 'gray'}
-        />
-        <Button
-          title="Fahrenheit"
-          onPress={() => dispatch(setUnit('F'))}
-          color={unit === 'F' ? 'blue' : 'gray'}
-        />
+        {(['C', 'F'] as TemperatureUnit[]).map(u => (
+          <TouchableOpacity
+            key={u}
+            onPress={() => {
+              Vibration.vibrate([0, 100, 200]);
+              dispatch(setUnit(u));
+            }}
+            style={[
+              styles.button,
+              { backgroundColor: unit === u ? 'blue' : 'gray' },
+            ]}
+          >
+            <Text style={styles.buttonText}>
+              {u === 'C' ? 'Celsius' : 'Fahrenheit'}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      <Text style={styles.title}>News Category</Text>
+      <Text maxFontSizeMultiplier={1.2} style={styles.title}>
+        News Category
+      </Text>
       <View style={styles.categoriesContainer}>
         {categories.map(cat => (
-          <Button
+          <TouchableOpacity
             key={cat}
-            title={cat}
-            onPress={() => dispatch(setCategory(cat))}
-            color={category === cat ? 'blue' : 'gray'}
-          />
+            onPress={() => {
+              Vibration.vibrate([0, 100, 200]);
+              dispatch(setCategory(cat));
+            }}
+            style={[
+              styles.categoryButton,
+              { backgroundColor: category === cat ? 'blue' : 'gray' },
+            ]}
+          >
+            <Text maxFontSizeMultiplier={1.2} style={styles.buttonText}>
+              {cat}
+            </Text>
+          </TouchableOpacity>
         ))}
       </View>
 
       <View style={styles.currentSelection}>
-        <Text>Selected Unit: {unit}</Text>
-        <Text>Selected Category: {category}</Text>
+        <Text
+          maxFontSizeMultiplier={1.2}
+          style={{
+            fontSize: 14,
+            fontWeight: '400',
+          }}
+        >
+          Selected Unit: {unit}
+        </Text>
+        <Text
+          maxFontSizeMultiplier={1.2}
+          style={{
+            fontSize: 14,
+            fontWeight: '400',
+          }}
+        >
+          Selected Category: {category}
+        </Text>
       </View>
     </ScrollView>
   );
@@ -75,10 +116,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 24,
   },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+  },
+  categoryButton: {
+    padding: 10,
+    borderRadius: 8,
+    margin: 4,
+    minWidth: '45%',
+    alignItems: 'center',
   },
   currentSelection: {
     marginTop: 24,
